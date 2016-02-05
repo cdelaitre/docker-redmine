@@ -1,23 +1,24 @@
 # docker-redmine
 
-## docker-compose : redmine + mysql
+## docker-compose : official redmine with mysql back-end
 
-### Volumes
-* ``/data/redmine-db`` : mysql filesystem
-* ``/data/redmine-db-init`` : contains a backup file 00_xxx.sql.gz automatically restored at start of mysql container
+### Volumes on docker host
+* ``/data/redmine-db`` : database filesystem
+* ``/data/redmine-db-init`` : database initialization (can contain a backup file xxx.sql.gz automatically restored at start of database container)
 * ``/data/redmine/files`` : redmine user files
 * ``/data/redmine/plugins`` : redmine plugins
 
 ### Environment
-* ``REDMINE_NO_DB_MIGRATE=1`` : to prevent early redmine migration
+* ``REDMINE_NO_DB_MIGRATE=1`` : to prevent early redmine database migration
 
 ## Setup
-### Create filesystem
+### Create directories on docker host
 ```
 mkdir -p /data/redmine-db /data/redmine-db-init /data/redmine/files /data/redmine/plugins
 ```
 
-### Install Redmine Plugins
+### Pre-install redmine plugins (option)
+Example :
 ```
 cd /data/redmine/plugins
 git clone https://github.com/annikoff/redmine_plugin_computed_custom_field.git computed_custom_field
@@ -28,7 +29,7 @@ curl -L https://bitbucket.org/bugzinga/redcase/downloads/redcase-1.0.zip > redca
 ### Create then start containers
 * `./run.sh` or `docker-compose up -d`
 
-### Redmine migration
+### Redmine database and plugins migrations
 ```
 docker exec -it redmine_redmine_1 /bin/bash
 ```
