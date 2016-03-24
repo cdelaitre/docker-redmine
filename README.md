@@ -7,12 +7,12 @@ Requires :
 * docker-compose version 1.6.2+
 
 ## Usage
-### Create directories on docker host
+### 1.1 Create directories on docker host
 ```
 mkdir -p /data/redmine/mysql /data/redmine/db-init /data/redmine/files /data/redmine/plugins
 ```
 
-### Pre-install redmine plugins (option)
+### 1.2 Pre-install redmine plugins (option)
 Example :
 ```
 cd /data/redmine/plugins
@@ -21,10 +21,10 @@ git clone https://github.com/JostBaron/redmine_workload.git redmine_workload
 curl -L https://bitbucket.org/bugzinga/redcase/downloads/redcase-1.0.zip > redcase-1.0.zip && unzip redcase-1.0.zip && rm -f redcase-1.0.zip
 ```
 
-### Create then start containers
+### 2. Create & Start containers
 * `./run.sh` or `docker-compose up -d`
 
-### Redmine database and plugins migrations
+### 3. Migrate database and plugins
 ```
 docker exec -it redmine_redmine_1 /bin/bash
 ```
@@ -34,7 +34,7 @@ RAILS_ENV=production bundle exec rake db:migrate
 RAILS_ENV=production bundle exec rake redmine:plugins:migrate
 ```
 
-### Redmine URL
+### Access URL
 ```
 http://<docker_host_ip>
 ```
