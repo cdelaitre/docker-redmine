@@ -1,23 +1,29 @@
-db:
-  image: mysql
-  volumes:
-    - /data/redmine-db:/var/lib/mysql
-    - /data/redmine-db-init:/docker-entrypoint-initdb.d
-  environment:
-    - MYSQL_ROOT_PASSWORD=mysql123
-    - MYSQL_DATABASE=redmine
-    - MYSQL_USER=redmine
-    - MYSQL_PASSWORD=redmine
-    - MYSQL_ALLOW_EMPTY_PASSWORD=no
-  
-redmine:
-  image: redmine
-  volumes:
-    - /data/redmine/files:/usr/src/redmine/files
-    - /data/redmine/plugins:/usr/src/redmine/plugins
-  ports:
-    - 52080:3000
-  links:
-    - db:mysql
-  environment:
-    - REDMINE_NO_DB_MIGRATE=1
+version: '2'
+services:
+  mysql:
+    image: mysql
+    volumes:
+      - /data/redmine/mysql:/var/lib/mysql
+      - /data/redmine/db-init:/docker-entrypoint-initdb.d
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysql123
+      - MYSQL_DATABASE=redmine
+      - MYSQL_USER=redmine
+      - MYSQL_PASSWORD=redmine
+      - MYSQL_ALLOW_EMPTY_PASSWORD=no
+  redmine:
+    image: redmine:3.2.1-passenger
+    depends_on:
+      - mysql
+    ports:
+      - 80:3000
+    volumes:
+      - /data/redmine/files:/usr/src/redmine/files
+      - /data/redmine/plugins:/usr/src/redmine/plugins
+    environment:
+      - MYSQL_PORT_3306_TCP=3306
+      - MYSQL_ENV_MYSQL_USER=root
+      - MYSQL_ENV_MYSQL_PASSWORD=mysql123
+      - MYSQL_ENV_MYSQL_DATABASE=redmine
+      - REDMINE_NO_DB_MIGRATE=1
+      - PASSENGER_DOWNLOAD_NATIVE_SUPPORT_BINARY=0
