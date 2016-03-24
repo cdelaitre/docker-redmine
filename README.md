@@ -1,20 +1,23 @@
 # docker-redmine
 
-## docker-compose : official redmine with mysql back-end
+## Official redmine with mysql back-end
+
+Requires : docker-compose version 1.6.2, build 4d72027
 
 ### Volumes on docker host
-* ``/data/redmine-db`` : database filesystem
-* ``/data/redmine-db-init`` : database initialization (can contain a backup file xxx.sql.gz automatically restored at start of database container)
+* ``/data/redmine/mysql`` : database filesystem
+* ``/data/redmine/db-init`` : database initialization (can contain a backup file xxx.sql.gz automatically restored at start of database container)
 * ``/data/redmine/files`` : redmine user files
 * ``/data/redmine/plugins`` : redmine plugins
 
 ### Environment
 * ``REDMINE_NO_DB_MIGRATE=1`` : to prevent early redmine database migration
+* ``PASSENGER_DOWNLOAD_NATIVE_SUPPORT_BINARY=1`` : to prevent passenger download
 
 ## Setup
 ### Create directories on docker host
 ```
-mkdir -p /data/redmine-db /data/redmine-db-init /data/redmine/files /data/redmine/plugins
+mkdir -p /data/redmine/mysql /data/redmine/db-init /data/redmine/files /data/redmine/plugins
 ```
 
 ### Pre-install redmine plugins (option)
@@ -34,9 +37,12 @@ curl -L https://bitbucket.org/bugzinga/redcase/downloads/redcase-1.0.zip > redca
 docker exec -it redmine_redmine_1 /bin/bash
 ```
 ```
-rake db:migrate
-rake redmine:plugins:migrate RAILS_ENV=production
+cd /usr/src/redmine/
+RAILS_ENV=production bundle exec rake db:migrate
+RAILS_ENV=production bundle exec rake redmine:plugins:migrate
 ```
 
-### Redmine restart
-* `docker restart redmine_redmine_1`
+### Redmine URL
+```
+http://<docker_host_ip>
+```
