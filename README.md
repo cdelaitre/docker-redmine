@@ -2,19 +2,11 @@
 
 ## Official redmine with mysql back-end
 
-Requires : docker-compose version 1.6.2, build 4d72027
+Requires :
+* docker-engine version 1.10.2+
+* docker-compose version 1.6.2+
 
-### Volumes on docker host
-* ``/data/redmine/mysql`` : database filesystem
-* ``/data/redmine/db-init`` : database initialization (can contain a backup file xxx.sql.gz automatically restored at start of database container)
-* ``/data/redmine/files`` : redmine user files
-* ``/data/redmine/plugins`` : redmine plugins
-
-### Environment
-* ``REDMINE_NO_DB_MIGRATE=1`` : to prevent early redmine database migration
-* ``PASSENGER_DOWNLOAD_NATIVE_SUPPORT_BINARY=1`` : to prevent passenger download
-
-## Setup
+## Usage
 ### Create directories on docker host
 ```
 mkdir -p /data/redmine/mysql /data/redmine/db-init /data/redmine/files /data/redmine/plugins
@@ -46,3 +38,15 @@ RAILS_ENV=production bundle exec rake redmine:plugins:migrate
 ```
 http://<docker_host_ip>
 ```
+
+## Informations
+
+### Volumes on docker host
+* ``/data/redmine/mysql`` : database filesystem
+* ``/data/redmine/db-init`` : database initialization (can contain a backup file xxx.sql.gz automatically restored at start of database container)
+* ``/data/redmine/files`` : redmine user files
+* ``/data/redmine/plugins`` : redmine plugins
+
+### Environment
+* ``REDMINE_NO_DB_MIGRATE=1`` : to prevent early redmine database migration
+* ``PASSENGER_DOWNLOAD_NATIVE_SUPPORT_BINARY=1`` : to prevent passenger download
